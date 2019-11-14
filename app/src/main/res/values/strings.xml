@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SimpleCountdownTimer</string>
+    <string name="title_activity_set_time">SetTime</string>
+    <string name="button_set">Set</string>
+</resources>
