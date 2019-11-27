@@ -16,6 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Primary screen for displaying and selecting timers to add/edit/delete.
+ */
 public class MainActivity extends AppCompatActivity implements MainActivityInterface {
     public static final String EXTRA_TIME = "com.example.simplecountdowntimer.TIME";
     public static final String EXTRA_NAME = "com.example.simplecountdowntimer.NAME";
@@ -27,7 +30,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     private Button setReset;
     private Timer timer;
 
-
+    /**
+     * Invoked on creation of the activity. Sets up the timer display screen, or loads it from
+     * memory.
+     * @param savedInstanceState The default instanced state that is passed normally with this method.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         updateTimer(timeLeftInMilliseconds);
     }
 
+    /**
+     * Invoked when app stops, save data to shared preferences
+     */
     @Override
     public void onStop() {
         // When app stops, save data to shared preferences
@@ -76,7 +86,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
     }
 
-    public void setTimer(View view) {
+    /**
+     * Called when we set a new or existing timer.
+     */
+    public void setTimer() {
         Log.i("Tag", "setTimer called");
         // If there is time left on the timer, RESET it and continue to run.
         if(timer.getTimerRunning()) {
@@ -107,6 +120,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         }
     }
 
+    /**
+     * Invoked on pressing either the start or stop button.
+     */
     public void startStop () {
         if (timer.getTimerRunning()) {
             Log.i("Tag", "stopTimer called");
@@ -122,6 +138,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         }
     }
 
+    /**
+     * Updates the views to display the time, continually counting down
+     * @param timeLeftInMilliseconds The time left in milliseconds.
+     */
     public void updateTimer(long timeLeftInMilliseconds) {
         int hours = (int) ((timeLeftInMilliseconds / (1000 * 60 * 60)) % 24);
         int minutes = (int) ((timeLeftInMilliseconds / (1000 * 60)) % 60);

@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * This activity lets the user edit or create a new timer with given parameters.
+ */
 public class SetTimer extends AppCompatActivity {
     public static final String EXTRA_TIME = "com.example.com.example.SimpleCountdownTimer.TIME";
     public static final String EXTRA_NAME = "com.example.com.example.SimpleCountdownTimer.NAME";
@@ -18,7 +21,10 @@ public class SetTimer extends AppCompatActivity {
     private TextView edittext3;
     private TextView edittext4;
 
-
+    /**
+     * Invoked when the activity starts.
+     * @param savedInstanceState The default instanced state that is passed normally with this method.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("Tag", "SetTimer called");
@@ -41,6 +47,10 @@ public class SetTimer extends AppCompatActivity {
         Log.i("Tag", "Finished");
     }
 
+    /**
+     * Finalizes the user input and creates/applies changes to the timer.
+     * @param view The view which will be used for the timer.
+     */
     public void loadTime (View view) {
         Log.i("Tag", "loadTime called");
 
