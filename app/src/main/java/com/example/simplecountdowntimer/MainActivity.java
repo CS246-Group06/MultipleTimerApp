@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.sql.Time;
@@ -27,21 +28,20 @@ import java.util.Arrays;
  */
 public class MainActivity extends AppCompatActivity implements MainActivityInterface {
     public static final String TAG = "MainActivity";
-
     public static final String EXTRA_TIME = "com.example.simplecountdowntimer.TIME";
     public static final String EXTRA_NAME = "com.example.simplecountdowntimer.NAME";
     public static final String EXTRA_RESET_TIME = "com.example.simplecountdowntimer.RESET_TIME";
     public static final String TIMER_DATA_KEY = "TIMER_DATA_KEY";
 
-    //private TextView countDownText;
-    //private TextView setRest;
-    //private TextView editlabel;
-    //private Button countDownButton;
-    //private Button setReset;
-    //private Timer timer;
-
     //TODO: Convert to local
+    /**
+     * The array list of timers, can add or remove from this collection.
+     */
     private ArrayList<Timer> _timers;
+
+    /**
+     * The adapter which converts the model timers to views.
+     */
     private TimerListAdapter _adapter;
 
     /**
@@ -55,31 +55,35 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         setContentView(R.layout.activity_main);
         Log.i("Tag", "onCreate");
 
-        /*editlabel = findViewById(R.id.labelName);
-        setReset = findViewById(R.id.setReset);
-        countDownText = findViewById(R.id.countDownText2);
-        countDownButton = findViewById(R.id.countdown_button);
-        countDownButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startStop();
-            }
-        });*/
 
-        // Set time with data from memory
+        // ################
+        // ### STEP ONE ### - Load the timers from data, if there are any.
+        // ################
         SharedPreferences sharedPref = getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
         Gson gson = new Gson();
+
+        //NOTE: Uncomment the following to reset the timer data. Debug purposes only.
+        /*SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.commit();*/
+
         String jsonFileContents = sharedPref.getString(TIMER_DATA_KEY, "FAIL");
 
         if (jsonFileContents != "FAIL")
         {
             TimerSerializable[] timersLoaded = gson.fromJson(jsonFileContents, TimerSerializable[].class);
-
-
+            Log.d(TAG, "Successfully loaded timers.");
             _timers = new ArrayList<>();
 
             for (int i = 0; i < timersLoaded.length; i++)
             {
+                //Load each timer
+                TimerSerializable serializable = timersLoaded[i];
+
+                if (serializable.timerRunning) {
+                    long timeEllapsedMilliseconds = System.currentTimeMillis() - serializable.lastTimeStampInMilliseconds;
+                    serializable.timeLeftInMilliseconds -= timeEllapsedMilliseconds;
+                }
 
                 Timer timer = new Timer(timersLoaded[i].timeLeftInMilliseconds, timersLoaded[i].timerName, timersLoaded[i].resetTime);
 
@@ -90,62 +94,76 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
                 _timers.add(timer);
             }
-            //_timers.addAll(Arrays.asList(timersLoaded));
         }
         else
         {
+            Log.d(TAG, "Failed to load timers, initializing new timer array.");
             //Failed to load, create empty
             _timers = new ArrayList<>();
-
-            _timers.add(new Timer(5000, "First Timer Test", 5000));
-            _timers.add(new Timer(0, "Second Timer Test", 0));
-            _timers.add(new Timer(0, "Third Timer Test", 0));
-            _timers.add(new Timer(0, "Fourth Timer Test", 0));
-            _timers.add(new Timer(0, "Wow this is working", 0));
-            _timers.add(new Timer(0, "Still is", 0));
         }
 
-        //long timeLeftInMillisecondsLoaded = sharedPref.getLong(MainActivity.EXTRA_TIME, 0);
-        //long resetTime= sharedPref.getLong("resetTime", 0);
 
-        // Update local variable by pulling from shared preferences
-        //String timerName = sharedPref.getString(EXTRA_NAME, "Timer 1");
-        //editlabel.setText(timerName);
-
-        // Updates variables with time and label set by user and passed with intent
-        //long timeLeftInMilliseconds = getIntent().getLongExtra(EXTRA_TIME, timeLeftInMillisecondsLoaded);
-        //timer = new Timer(this, timeLeftInMilliseconds, timerName, resetTime);
-
-        //Test to see if we are modifying a timer.
+        // ################
+        // ### STEP TWO ### - If a new or modified timer came from the set timer activity, we
+        // ################   then add the new timer or modify the existing timer here.
         Intent intent = getIntent();
         long timeLeftInMillisecondsLoaded = intent.getLongExtra(EXTRA_TIME, -1);
         long resetTime = intent.getLongExtra(EXTRA_RESET_TIME, -1);
         String nameTimer = intent.getStringExtra(EXTRA_NAME);
         int indexNewTimer = intent.getIntExtra(SetTimer.POSITION_INDEX, -1);
+        Log.d(TAG, "Index New Timer: " + indexNewTimer);
 
         if (indexNewTimer != -1)
         {
-            _timers.set(indexNewTimer, new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime));
+            //Determine if its a new timer or an existing timer by index. If the index is out of bounds, it is a new timer
+            Log.d(TAG, "Size Timers: " + _timers.size());
+
+            if (indexNewTimer < _timers.size()) {
+                //It is an existing timer we are modifying
+                _timers.set(indexNewTimer, new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime));
+            } else {
+                //It is a new timer
+                _timers.add(new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime));
+            }
         }
 
-        // Updates the Text box displaying time set by user
-        //updateTimer(timeLeftInMilliseconds);
 
+        // ##################
+        // ### STEP THREE ### - We set up the view for each timer here
+        // ##################
         ListView recyclerView = findViewById(R.id.timers_list_view);
         _adapter = new TimerListAdapter(this, R.layout.timer_adapter_view_layout, _timers);
         _adapter.MainActivityInterface = this;
         recyclerView.setAdapter(_adapter);
+
+
+        // #################
+        // ### STEP FOUR ### - Add an onClick listener to the add timer button.
+        // #################
+        FloatingActionButton addTimerButton = findViewById(R.id.add_timer_button);
+        addTimerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTimerButtonPress();
+            }
+        });
     }
 
-
-
     /**
-     * Invoked when app stops, save data to shared preferences
+     * Invoked when app stops, saves data to shared preferences
      */
     @Override
     public void onStop() {
         // When app stops, save data to shared preferences
+
+        persistTimers();
         super.onStop();
+    }
+
+    /**
+     * Saves timer data.
+     */
+    private void persistTimers() {
         SharedPreferences sharedPref = getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
@@ -154,19 +172,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         for (int i = 0; i < _timers.size(); i++) {
             timerSerializables[i] = new TimerSerializable(_timers.get(i));
         }
-        
+
         Gson gson = new Gson();
         String jsonFile = gson.toJson(timerSerializables);
+
+        Log.v(TAG, "JSON File: " + jsonFile);
         editor.putString(TIMER_DATA_KEY, jsonFile);
         editor.commit();
-
-        /*editor.putLong(MainActivity.EXTRA_TIME, timer.getTimerLeftInMilliseconds());
-        editor.putString(MainActivity.EXTRA_NAME, timer.getTimerName());
-        editor.putLong("resetTime", timer.getResetTime());
-        editor.apply();*/
-
     }
 
+    /**
+     * Invoked when the add_timer_button is pressed.
+     */
+    public void addTimerButtonPress() {
+        Log.d(TAG, "Timers Count: " + _timers.size());
+        startSetTimerActivity(_timers.size());
+    }
+
+    /**
+     * Invoked when a start_stop_button of one of the timers is pressed.
+     * @param holder The view manager of the timer which the button was pressed on.
+     */
     public void startStopButtonPress(TimerHolder holder) {
         Log.i(TAG, "Start Stop Button Pressed");
         Timer timer = holder.Timer;
@@ -174,6 +200,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         startStopTimer(timer, holder.StartStopButton, holder.SetResetButton);
     }
 
+    /**
+     * Invoked when a set_reset_button of one of the timers is pressed.
+     * @param holder The view manager of the timer which the button was pressed on.
+     */
     public void setResetButtonPress(TimerHolder holder) {
 
         if (holder == null) {
@@ -204,21 +234,32 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // If no time left on the timer, go to SetTimer activity
         else if(!timer.getTimerRunning() && timer.getTimerLeftInMilliseconds() == timer.getResetTime()){
             Log.i("Tag", "second ELSE IF ran");
-            Intent intent = new Intent(this, SetTimer.class);
-            intent.putExtra(SetTimer.POSITION_INDEX, holder.Position);
-            startActivity(intent);
+            startSetTimerActivity(holder.Position);
         }
         else {
             Log.i("Tag", "ELSE ran");
-            Intent intent = new Intent(this, SetTimer.class);
-            Log.d(TAG, "Holder Position in Intent: " + holder.Position);
-            intent.putExtra(SetTimer.POSITION_INDEX, holder.Position);
-            startActivity(intent);
+            startSetTimerActivity(holder.Position);
         }
     }
 
-    private void startStopTimer(Timer timer, Button startStopButton, Button setResetButton) {
+    /**
+     * Invoke to move to the set timer activity to create or modify a timer.
+     * @param indexOfTimer The index of the timer to modify. If a new timer is desired make it the index of the new timer.
+     */
+    private void startSetTimerActivity(int indexOfTimer) {
+        persistTimers();
+        Intent intent = new Intent(this, SetTimer.class);
+        intent.putExtra(SetTimer.POSITION_INDEX, indexOfTimer);
+        startActivity(intent);
+    }
 
+    /**
+     * Either starts or pauses a timer
+     * @param timer The timer to start or pause
+     * @param startStopButton The start_stop_button of the timer.
+     * @param setResetButton The set_reset_button of the timer.
+     */
+    private void startStopTimer(Timer timer, Button startStopButton, Button setResetButton) {
         if (timer.getTimerRunning()) {
             Log.i("Tag", "stopTimer called");
             timer.stopTimer();
@@ -232,81 +273,4 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
             timer.setTimerRunning(true);
         }
     }
-
-
-    /**
-     * Called when we set a new or existing timer.
-     */
-    /*public void setTimer() {
-        Log.i("Tag", "setTimer called");
-        // If there is time left on the timer, RESET it and continue to run.
-        if(timer.getTimerRunning()) {
-            Log.i("Tag", "IF ran");
-            startStop();
-            timer.reset();
-            updateTimer(timer.getTimerLeftInMilliseconds());
-            setReset.setText("SET");
-        }
-        // If there is time left on the timer, but timer has been paused, .
-        else if(!timer.getTimerRunning() && (timer.getTimerLeftInMilliseconds() != timer.getResetTime())) {
-            Log.i("Tag", "first ELSE IF ran");
-            timer.getResetTime();
-            timer.reset();
-            updateTimer(timer.getTimerLeftInMilliseconds());
-            setReset.setText("SET");
-        }
-        // If no time left on the timer, go to SetTimer activity
-        else if(!timer.getTimerRunning() && timer.getTimerLeftInMilliseconds() == timer.getResetTime()){
-            Log.i("Tag", "second ELSE IF ran");
-            Intent intent = new Intent(this, SetTimer.class);
-            startActivity(intent);
-        }
-        else {
-            Log.i("Tag", "ELSE ran");
-            Intent intent = new Intent(this, SetTimer.class);
-            startActivity(intent);
-        }
-    }*/
-
-    /**
-     * Invoked on pressing either the start or stop button.
-     */
-    /*public void startStop () {
-        if (timer.getTimerRunning()) {
-            Log.i("Tag", "stopTimer called");
-            timer.stopTimer();
-            countDownButton.setText("START");
-            timer.setTimerRunning(false);
-        } else {
-            Log.i("Tag", "startTimer called");
-            timer.startTimer();
-            countDownButton.setText("PAUSE");
-            setReset.setText("RESET");
-            timer.setTimerRunning(true);
-        }
-    }*/
-
-    /**
-     * Updates the views to display the time, continually counting down
-     * @param timeLeftInMilliseconds The time left in milliseconds.
-     */
-    /*public void updateTimer(long timeLeftInMilliseconds) {
-        int hours = (int) ((timeLeftInMilliseconds / (1000 * 60 * 60)) % 24);
-        int minutes = (int) ((timeLeftInMilliseconds / (1000 * 60)) % 60);
-        int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
-        String timeLeftText;
-
-        timeLeftText = "" + hours;
-        if(hours < 10) timeLeftText = "0" + hours;
-        timeLeftText += ":";
-
-        if(minutes < 10) timeLeftText += "0" + minutes;
-        if(minutes >= 10) timeLeftText += minutes;
-        timeLeftText += ":";
-
-        if(seconds < 10) timeLeftText += "0";
-        timeLeftText += seconds;
-
-        countDownText.setText(timeLeftText);
-    }*/
 }

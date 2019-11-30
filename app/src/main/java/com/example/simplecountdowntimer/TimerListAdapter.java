@@ -17,6 +17,10 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages the view for all of the timers in the list.
+ * Creates TimerHolders to manage each individual view
+ */
 public class TimerListAdapter extends ArrayAdapter<Timer> {
     public static final String TAG = "TimerListAdapter";
 

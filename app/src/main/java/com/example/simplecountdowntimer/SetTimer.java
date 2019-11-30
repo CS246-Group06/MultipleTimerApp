@@ -45,7 +45,6 @@ public class SetTimer extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_TIME);
         _indexOfTimer = intent.getIntExtra(POSITION_INDEX, -1);
 
         Log.d(TAG, "Index of Timer is: " + _indexOfTimer);
@@ -86,12 +85,6 @@ public class SetTimer extends AppCompatActivity {
         intent.putExtra(MainActivity.EXTRA_NAME, name2);
         intent.putExtra(MainActivity.EXTRA_TIME, totalTimeInMilliseconds);
         intent.putExtra(MainActivity.EXTRA_RESET_TIME, totalTimeInMilliseconds);
-        /*SharedPreferences sharedPref = getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putLong(MainActivity.EXTRA_TIME, totalTimeInMilliseconds);
-        editor.putString(MainActivity.EXTRA_NAME, name2);
-        editor.putLong("resetTime", totalTimeInMilliseconds);
-        editor.apply();*/
         startActivity(intent);
     }
 }

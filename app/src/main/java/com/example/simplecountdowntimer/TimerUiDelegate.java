@@ -5,10 +5,8 @@ package com.example.simplecountdowntimer;
  */
 public interface TimerUiDelegate {
 
-    //public void updateTimer(long timeInMilliseconds);
-
     /**
-     *
+     * Updates the user interface with the current time.
      * @param timeLeft
      */
     void updateUserInterface(String timeLeft);
