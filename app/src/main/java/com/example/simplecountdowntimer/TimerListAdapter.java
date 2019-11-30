@@ -65,6 +65,8 @@ public class TimerListAdapter extends ArrayAdapter<Timer> {
         holder.Position = position;
         Log.d("Holder:", "This is the position: " + holder.Position);
 
+
+
         //MUY IMPORTANTE
         convertView.setTag(holder);
 
@@ -90,6 +92,11 @@ public class TimerListAdapter extends ArrayAdapter<Timer> {
         //This can just be called more times when running!
         holder.TimeLeftTextView.setText(holder.Timer.GetStringTimeLeft());
         holder.Timer.TimerUiDelegate = holder;
+
+        if (holder.Timer.getTimerRunning()) {
+            holder.StartStopButton.setText("PAUSE");
+            holder.SetResetButton.setText("RESET");
+        }
 
         holder.StartStopButton.setOnClickListener(new View.OnClickListener() {
             @Override

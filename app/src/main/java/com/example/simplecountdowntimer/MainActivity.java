@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
                 if (timersLoaded[i].timerRunning) {
                     timer.startTimer();
+                    timer.setTimerRunning(timersLoaded[i].timerRunning);
                 }
 
                 _timers.add(timer);
