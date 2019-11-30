@@ -14,12 +14,19 @@ import android.widget.TextView;
  * This activity lets the user edit or create a new timer with given parameters.
  */
 public class SetTimer extends AppCompatActivity {
+    public static final String TAG = "SetTimer";
+    public static final String POSITION_INDEX = "com.example.com.example.SimpleCountdownTimer.INDEX";
     public static final String EXTRA_TIME = "com.example.com.example.SimpleCountdownTimer.TIME";
     public static final String EXTRA_NAME = "com.example.com.example.SimpleCountdownTimer.NAME";
     private TextView edittext;
     private TextView edittext2;
     private TextView edittext3;
     private TextView edittext4;
+
+    /**
+     * Indicates which timer we are modifying.
+     */
+    private int _indexOfTimer;
 
     /**
      * Invoked when the activity starts.
@@ -39,6 +46,9 @@ public class SetTimer extends AppCompatActivity {
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.EXTRA_TIME);
+        _indexOfTimer = intent.getIntExtra(POSITION_INDEX, -1);
+
+        Log.d(TAG, "Index of Timer is: " + _indexOfTimer);
 
         edittext.setText("Timer 1");
         edittext2.setText("00");
@@ -72,12 +82,16 @@ public class SetTimer extends AppCompatActivity {
 
         // Save time and label data to shared preference and go back to main activity
         Intent intent = new Intent(this, MainActivity.class);
-        SharedPreferences sharedPref = getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
+        intent.putExtra(POSITION_INDEX, _indexOfTimer);
+        intent.putExtra(MainActivity.EXTRA_NAME, name2);
+        intent.putExtra(MainActivity.EXTRA_TIME, totalTimeInMilliseconds);
+        intent.putExtra(MainActivity.EXTRA_RESET_TIME, totalTimeInMilliseconds);
+        /*SharedPreferences sharedPref = getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putLong(MainActivity.EXTRA_TIME, totalTimeInMilliseconds);
         editor.putString(MainActivity.EXTRA_NAME, name2);
         editor.putLong("resetTime", totalTimeInMilliseconds);
-        editor.apply();
+        editor.apply();*/
         startActivity(intent);
     }
 }

@@ -5,24 +5,24 @@ import android.util.Log;
 
 /**
  * Standard countdown timer. Set time to a certain amount and can count down to 0.
+ * TODO: Make serializable?
  */
-public class Timer {
+public class Timer  {
     private CountDownTimer countDownTimer;
     private long timeLeftInMilliseconds = 0;
     private long resetTime;
     private boolean timerRunning = false;
     private String timerName;
-    private MainActivityInterface MainActivityDelegate;
+    public TimerUiDelegate TimerUiDelegate;
 
     /**
      * Constructor method.
-     * @param delegate Activity Controller.
      * @param timeLeftInMilliseconds Current time.
      * @param name Name of timer.
      * @param resetTime The time to reset to, max time.
      */
-    public Timer(MainActivityInterface delegate, long timeLeftInMilliseconds, String name, long resetTime){
-        MainActivityDelegate = delegate;
+    public Timer(long timeLeftInMilliseconds, String name, long resetTime){
+        //TimerUiDelegate = delegate;
         this.timeLeftInMilliseconds = timeLeftInMilliseconds;
         this.timerName = name;
         this.resetTime = resetTime;
@@ -38,7 +38,7 @@ public class Timer {
     //Getters and Setters
     public boolean getTimerRunning(){return timerRunning;}
     public long getTimerLeftInMilliseconds(){return timeLeftInMilliseconds;}
-    public String getTimerNamer(){return timerName;}
+    public String getTimerName(){return timerName;}
     public long getResetTime(){return resetTime;}
 
 
@@ -78,6 +78,31 @@ public class Timer {
      * @param timeLeftInMilliseconds The time left in milliseconds.
      */
     public void updateTimer(long timeLeftInMilliseconds) {
-        MainActivityDelegate.updateTimer(timeLeftInMilliseconds);
+        //MainActivityDelegate.updateTimer(timeLeftInMilliseconds);
+        if (TimerUiDelegate != null) {
+            TimerUiDelegate.updateUserInterface(GetStringTimeLeft());
+        }
+    }
+
+    public String GetStringTimeLeft() {
+
+        String returnValue;
+
+        int hours = (int) ((timeLeftInMilliseconds / (1000 * 60 * 60)) % 24);
+        int minutes = (int) ((timeLeftInMilliseconds / (1000 * 60)) % 60);
+        int seconds = (int) (timeLeftInMilliseconds / 1000) % 60;
+
+        returnValue = "" + hours;
+        if(hours < 10) returnValue = "0" + hours;
+        returnValue += ":";
+
+        if(minutes < 10) returnValue += "0" + minutes;
+        if(minutes >= 10) returnValue += minutes;
+        returnValue += ":";
+
+        if(seconds < 10) returnValue += "0";
+        returnValue += seconds;
+
+        return returnValue;
     }
 }

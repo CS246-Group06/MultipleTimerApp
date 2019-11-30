@@ -1,13 +1,8 @@
 package com.example.simplecountdowntimer;
 
-/**
- * The interface for the model and view to interact with the controller activity.
- */
-public interface MainActivityInterface{
+import android.view.View;
 
-    /**
-     * Updates the views to display the time, continually counting down
-     * @param timeInMilliseconds The time left in milliseconds.
-     */
-    public void updateTimer(long timeInMilliseconds);
+public interface MainActivityInterface {
+    void startStopButtonPress(TimerHolder holder);
+    void setResetButtonPress(TimerHolder holder);
 }
