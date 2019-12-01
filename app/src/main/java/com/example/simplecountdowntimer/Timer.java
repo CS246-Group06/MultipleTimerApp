@@ -14,6 +14,15 @@ public class Timer  {
     private boolean timerRunning = false;
     private String timerName;
     public TimerUiDelegate TimerUiDelegate;
+    private String timerSound;
+
+    public String getTimerSound() {
+        return timerSound;
+    }
+
+    public void setTimerSound(String timerSound) {
+        this.timerSound = timerSound;
+    }
 
     /**
      * Constructor method.
@@ -21,11 +30,12 @@ public class Timer  {
      * @param name Name of timer.
      * @param resetTime The time to reset to, max time.
      */
-    public Timer(long timeLeftInMilliseconds, String name, long resetTime){
+    public Timer(long timeLeftInMilliseconds, String name, long resetTime, String timerSound) {
         //TimerUiDelegate = delegate;
         this.timeLeftInMilliseconds = timeLeftInMilliseconds;
         this.timerName = name;
         this.resetTime = resetTime;
+        this.timerSound = timerSound;
     }
 
     public void setTimerRunning(boolean running){timerRunning = running;}
@@ -106,3 +116,5 @@ public class Timer  {
         return returnValue;
     }
 }
+
+

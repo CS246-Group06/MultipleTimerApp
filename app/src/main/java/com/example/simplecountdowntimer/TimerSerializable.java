@@ -9,6 +9,7 @@ public class TimerSerializable {
     public long resetTime;
     public boolean timerRunning;
     public String timerName;
+    public String timerSound;
 
     /**
      * Initializes a serializable timer data object with each appropriate parameter
@@ -18,12 +19,13 @@ public class TimerSerializable {
      * @param timerRunning Whether the timer is running or not. Will catch up when loaded if "running".
      * @param timerName The name of the timer.
      */
-    public TimerSerializable(long timeLeftInMilliseconds, long lastTimeStampInMilliseconds, long resetTime, boolean timerRunning, String timerName) {
+    public TimerSerializable(long timeLeftInMilliseconds, long lastTimeStampInMilliseconds, long resetTime, boolean timerRunning, String timerName, String timerSound) {
         this.timeLeftInMilliseconds = timeLeftInMilliseconds;
         this.lastTimeStampInMilliseconds = lastTimeStampInMilliseconds;
         this.resetTime = resetTime;
         this.timerRunning = timerRunning;
         this.timerName = timerName;
+        this.timerSound = timerSound;
     }
 
     /**
@@ -36,5 +38,6 @@ public class TimerSerializable {
         resetTime = timer.getResetTime();
         timerRunning = timer.getTimerRunning();
         timerName = timer.getTimerName();
+        timerSound = timer.getTimerSound();
     }
 }

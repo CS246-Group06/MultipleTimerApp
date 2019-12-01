@@ -8,6 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
@@ -18,10 +21,12 @@ public class SetTimer extends AppCompatActivity {
     public static final String POSITION_INDEX = "com.example.com.example.SimpleCountdownTimer.INDEX";
     public static final String EXTRA_TIME = "com.example.com.example.SimpleCountdownTimer.TIME";
     public static final String EXTRA_NAME = "com.example.com.example.SimpleCountdownTimer.NAME";
+    public static final String EXTRA_SOUND = "com.example.com.example.SimpleCountdownTimer.SOUND";
     private TextView edittext;
     private TextView edittext2;
     private TextView edittext3;
     private TextView edittext4;
+    private String sound;
 
     /**
      * Indicates which timer we are modifying.
@@ -38,6 +43,47 @@ public class SetTimer extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_timer);
+
+        // Setup spinner
+        final Spinner spinner;
+        ArrayAdapter<CharSequence> adapter;
+        spinner = (Spinner)findViewById(R.id.spinner);
+        adapter = ArrayAdapter.createFromResource(this, R.array.sound_choices, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sound = spinner.getItemAtPosition(position).toString();
+                Log.i("Tag", "Sound set to " + sound);
+                if(sound.equals("Digital Phone")){
+                    sound = "sound1";
+                    Log.i("Tag", "Sound1 set to " + sound);
+                }
+                else if(sound.equals("Gentle Wake")){
+                    sound = "sound2";
+                    Log.i("Tag", "Sound2 set to " + sound);
+                }
+                else if(sound.equals("Grandfather Clock")){
+                    sound = "sound3";
+                    Log.i("Tag", "Sound3 set to " + sound);
+                }
+                else if(sound.equals("Bell Alarm Clock")){
+                    sound = "sound4";
+                    Log.i("Tag", "Sound4 set to " + sound);
+                }
+                else{
+                    sound = "sound5";
+                    Log.i("Tag", "Sound5 set to " + sound);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         edittext = findViewById(R.id.editText);
         edittext2 = findViewById(R.id.editText2);
         edittext3 = findViewById(R.id.editText3);
@@ -85,6 +131,7 @@ public class SetTimer extends AppCompatActivity {
         intent.putExtra(MainActivity.EXTRA_NAME, name2);
         intent.putExtra(MainActivity.EXTRA_TIME, totalTimeInMilliseconds);
         intent.putExtra(MainActivity.EXTRA_RESET_TIME, totalTimeInMilliseconds);
+        intent.putExtra(MainActivity.EXTRA_SOUND, sound);
         startActivity(intent);
     }
 }
