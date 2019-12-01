@@ -10,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                     serializable.timeLeftInMilliseconds -= timeEllapsedMilliseconds;
                 }
 
-                Timer timer = new Timer(timersLoaded[i].timeLeftInMilliseconds, timersLoaded[i].timerName, timersLoaded[i].resetTime);
+                Timer timer = new Timer(timersLoaded[i].timeLeftInMilliseconds, timersLoaded[i].timerName, timersLoaded[i].resetTime, serializable.timerSound);
 
                 if (timersLoaded[i].timerRunning) {
                     timer.startTimer();
@@ -110,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         long timeLeftInMillisecondsLoaded = intent.getLongExtra(EXTRA_TIME, -1);
         long resetTime = intent.getLongExtra(EXTRA_RESET_TIME, -1);
         String nameTimer = intent.getStringExtra(EXTRA_NAME);
+        String timerSound = intent.getStringExtra(SetTimer.EXTRA_SOUND);
         int indexNewTimer = intent.getIntExtra(SetTimer.POSITION_INDEX, -1);
         Log.d(TAG, "Index New Timer: " + indexNewTimer);
 
@@ -120,10 +124,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
             if (indexNewTimer < _timers.size()) {
                 //It is an existing timer we are modifying
-                _timers.set(indexNewTimer, new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime));
+                _timers.set(indexNewTimer, new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime, timerSound));
             } else {
                 //It is a new timer
-                _timers.add(new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime));
+                _timers.add(new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime, timerSound));
             }
         }
 
@@ -147,6 +151,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 addTimerButtonPress();
             }
         });
+
+        /*SoundPool soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        int sound1 = soundPool.load(this, R.raw.digital_phone_ringing, 1);
+        soundPool.play(sound1, 1, 1, 1, -1, 1);*/
+
+        //AudioEngine.getInstance().AudioSetUp(this);
+        //AudioEngine.getInstance().soundOne.start();
     }
 
     /**

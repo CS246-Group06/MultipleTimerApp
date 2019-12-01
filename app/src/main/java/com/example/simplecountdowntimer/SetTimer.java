@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Set;
+
 /**
  * This activity lets the user edit or create a new timer with given parameters.
  */
@@ -131,7 +133,7 @@ public class SetTimer extends AppCompatActivity {
         intent.putExtra(MainActivity.EXTRA_NAME, name2);
         intent.putExtra(MainActivity.EXTRA_TIME, totalTimeInMilliseconds);
         intent.putExtra(MainActivity.EXTRA_RESET_TIME, totalTimeInMilliseconds);
-        intent.putExtra(MainActivity.EXTRA_SOUND, sound);
+        intent.putExtra(SetTimer.EXTRA_SOUND, sound);
         startActivity(intent);
     }
 }
