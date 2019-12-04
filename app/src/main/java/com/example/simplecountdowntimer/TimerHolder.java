@@ -1,6 +1,7 @@
 package com.example.simplecountdowntimer;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ public class TimerHolder implements TimerUiDelegate {
 
 
     //TODO: Change Timer to a delegate type for more security
+    View view;
     Timer Timer;
     TextView NameTextView;
     TextView TimeLeftTextView;

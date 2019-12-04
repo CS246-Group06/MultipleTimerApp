@@ -61,6 +61,7 @@ public class TimerListAdapter extends ArrayAdapter<Timer> {
         convertView = inflater.inflate(_resourceId, parent, false);
 
         TimerHolder holder = new TimerHolder();
+        holder.view = convertView;
         holder.Timer = _objects.get(position);
         holder.SetResetButton = convertView.findViewById(R.id.set_reset_button);
         holder.StartStopButton = convertView.findViewById(R.id.start_stop_button);
