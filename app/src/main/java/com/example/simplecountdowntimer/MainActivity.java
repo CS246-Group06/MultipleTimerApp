@@ -10,10 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,9 +19,10 @@ import android.widget.ListView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
 
 /**
  * Primary screen for displaying and selecting timers to add/edit/delete.
@@ -47,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
      */
     private TimerListAdapter _adapter;
 
+    private AudioEngine _audioEngine;
+
     /**
      * Invoked on creation of the activity. Sets up the timer display screen, or loads it from
      * memory.
@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i("Tag", "onCreate");
+
+
+        _audioEngine = new AudioEngine(this);
 
 
         // ################
@@ -208,6 +211,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         Log.i(TAG, "Start Stop Button Pressed");
         Timer timer = holder.Timer;
 
+        _audioEngine.StopSound(timer.getTimerSound());
+
         startStopTimer(timer, holder.StartStopButton, holder.SetResetButton);
     }
 
@@ -253,12 +258,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         }
     }
 
+    @Override
+    public void playSound(String soundName) {
+        _audioEngine.PlaySound(soundName);
+    }
+
+    @Override
+    public void stopSound(String soundName) {
+        _audioEngine.StopSound(soundName);
+    }
+
     /**
      * Invoke to move to the set timer activity to create or modify a timer.
      * @param indexOfTimer The index of the timer to modify. If a new timer is desired make it the index of the new timer.
      */
     private void startSetTimerActivity(int indexOfTimer) {
         persistTimers();
+        _audioEngine.Cleanup();
         Intent intent = new Intent(this, SetTimer.class);
         intent.putExtra(SetTimer.POSITION_INDEX, indexOfTimer);
         startActivity(intent);

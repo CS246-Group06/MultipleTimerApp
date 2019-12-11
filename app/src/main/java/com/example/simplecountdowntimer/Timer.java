@@ -69,7 +69,9 @@ public class Timer  {
             @Override
             public void onFinish() {
                 Log.i("Tag", "onFinish called");
-
+                if (TimerUiDelegate != null) {
+                    TimerUiDelegate.timerAlarm();
+                }
             }
         }.start();
         Log.i("Tag", "start called");

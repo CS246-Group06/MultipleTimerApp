@@ -68,13 +68,11 @@ public class TimerListAdapter extends ArrayAdapter<Timer> {
         holder.NameTextView = (TextView) convertView.findViewById(R.id.timerName);
         holder.TimeLeftTextView = (TextView) convertView.findViewById(R.id.time_left_display);
         holder.Position = position;
+        holder.MainActivityInterface = MainActivityInterface;
         Log.d("Holder:", "This is the position: " + holder.Position);
-
-
 
         //MUY IMPORTANTE
         convertView.setTag(holder);
-
 
         if (convertView.getTag() == null) {
             Log.d(TAG, "Holder is null");

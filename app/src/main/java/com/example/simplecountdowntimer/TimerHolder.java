@@ -18,13 +18,18 @@ public class TimerHolder implements TimerUiDelegate {
     TextView TimeLeftTextView;
     Button SetResetButton;
     Button StartStopButton;
+    MainActivityInterface MainActivityInterface;
     int Position;
 
+    /**
+     * Updates the user interface per second.
+     * @param timeLeft
+     */
     @Override
     public void updateUserInterface(String timeLeft) {
         TimeLeftTextView.setText(timeLeft);
         Log.d("AudioEngine", "Test");
-        if((Timer.getTimerLeftInMilliseconds()/ 1000) % 60 <= 0){ //(timeLeftInMilliseconds / 1000) % 60
+        /*if((Timer.getTimerLeftInMilliseconds()/ 1000) % 60 <= 0){ //(timeLeftInMilliseconds / 1000) % 60
 
             if(Timer.getTimerSound().equals("Digital Phone")){
                 Log.d("AudioEngine", "Sound One Played");
@@ -46,22 +51,15 @@ public class TimerHolder implements TimerUiDelegate {
                 Log.d("AudioEngine", "Sound Five Played");
                 AudioEngine.getInstance().soundFive.start();
             }
+        }*/
+    }
 
-            /*if(Timer.getTimerSound().equals("Digital Phone")){
-                AudioEngine.getInstance().soundPool.play(AudioEngine.getInstance().sound1, 1, 1, 0, -1, 1);
-            }
-            else if(Timer.getTimerSound().equals("Gentle Wake")){
-                AudioEngine.getInstance().soundPool.play(AudioEngine.getInstance().sound2, 1, 1, 0, -1, 1);
-            }
-            else if(Timer.getTimerSound().equals("Grandfather Clock")){
-                AudioEngine.getInstance().soundPool.play(AudioEngine.getInstance().sound3, 1, 1, 0, -1, 1);
-            }
-            else if(Timer.getTimerSound().equals("Bell Alarm Clock")){
-                AudioEngine.getInstance().soundPool.play(AudioEngine.getInstance().sound4, 1, 1, 0, -1, 1);
-            }
-            else{
-                AudioEngine.getInstance().soundPool.play(AudioEngine.getInstance().sound5, 1, 1, 0, -1, 1);
-            }*/
-        }
+    /**
+     * Invoked once when the timer runs out of time.
+     */
+    @Override
+    public void timerAlarm() {
+        Log.d("TimerHolder","Stopped timer");
+        MainActivityInterface.playSound(Timer.getTimerSound());
     }
 }

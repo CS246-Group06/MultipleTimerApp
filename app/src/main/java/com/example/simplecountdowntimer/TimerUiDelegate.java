@@ -10,4 +10,9 @@ public interface TimerUiDelegate {
      * @param timeLeft
      */
     void updateUserInterface(String timeLeft);
+
+    /**
+     * Invoked on the timer running out of time.
+     */
+    void timerAlarm();
 }
