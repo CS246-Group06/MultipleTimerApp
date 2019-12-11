@@ -7,4 +7,5 @@ public interface MainActivityInterface {
     void setResetButtonPress(TimerHolder holder);
     void playSound(String soundName);
     void stopSound(String soundName);
+    void deleteButtonPress(TimerHolder holder);
 }

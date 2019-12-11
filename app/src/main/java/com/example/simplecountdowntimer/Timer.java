@@ -15,6 +15,7 @@ public class Timer  {
     private String timerName;
     public TimerUiDelegate TimerUiDelegate;
     private String timerSound;
+    private int color;
 
     public String getTimerSound() {
         return timerSound;
@@ -30,12 +31,13 @@ public class Timer  {
      * @param name Name of timer.
      * @param resetTime The time to reset to, max time.
      */
-    public Timer(long timeLeftInMilliseconds, String name, long resetTime, String timerSound) {
+    public Timer(long timeLeftInMilliseconds, String name, long resetTime, String timerSound, int color) {
         //TimerUiDelegate = delegate;
         this.timeLeftInMilliseconds = timeLeftInMilliseconds;
         this.timerName = name;
         this.resetTime = resetTime;
         this.timerSound = timerSound;
+        this.color = color;
     }
 
     public void setTimerRunning(boolean running){timerRunning = running;}
@@ -116,6 +118,14 @@ public class Timer  {
         returnValue += seconds;
 
         return returnValue;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
     /*public void manageBlinkEffect(){
         ObjectAnimator anim = ObjectAnimator.ofArgb(view,"backgroundColor", Color.WHITE,Color.RED,Color.WHITE);

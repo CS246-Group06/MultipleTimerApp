@@ -18,6 +18,7 @@ public class TimerHolder implements TimerUiDelegate {
     TextView TimeLeftTextView;
     Button SetResetButton;
     Button StartStopButton;
+    Button DeleteButton;
     MainActivityInterface MainActivityInterface;
     int Position;
 
@@ -29,29 +30,6 @@ public class TimerHolder implements TimerUiDelegate {
     public void updateUserInterface(String timeLeft) {
         TimeLeftTextView.setText(timeLeft);
         Log.d("AudioEngine", "Test");
-        /*if((Timer.getTimerLeftInMilliseconds()/ 1000) % 60 <= 0){ //(timeLeftInMilliseconds / 1000) % 60
-
-            if(Timer.getTimerSound().equals("Digital Phone")){
-                Log.d("AudioEngine", "Sound One Played");
-                AudioEngine.getInstance().soundOne.start();
-            }
-            else if(Timer.getTimerSound().equals("Gentle Wake")){
-                Log.d("AudioEngine", "Sound Two Played");
-                AudioEngine.getInstance().soundTwo.start();
-            }
-            else if(Timer.getTimerSound().equals("Grandfather Clock")){
-                Log.d("AudioEngine", "Sound Three Played");
-                AudioEngine.getInstance().soundThree.start();
-            }
-            else if(Timer.getTimerSound().equals("Bell Alarm Clock")){
-                Log.d("AudioEngine", "Sound Four Played");
-                AudioEngine.getInstance().soundFour.start();
-            }
-            else{
-                Log.d("AudioEngine", "Sound Five Played");
-                AudioEngine.getInstance().soundFive.start();
-            }
-        }*/
     }
 
     /**

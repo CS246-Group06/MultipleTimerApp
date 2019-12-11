@@ -5,13 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+
+import com.skydoves.colorpickerview.ColorPickerView;
+import com.skydoves.colorpickerview.listeners.ColorListener;
 
 import java.util.Set;
 
@@ -24,11 +30,13 @@ public class SetTimer extends AppCompatActivity {
     public static final String EXTRA_TIME = "com.example.com.example.SimpleCountdownTimer.TIME";
     public static final String EXTRA_NAME = "com.example.com.example.SimpleCountdownTimer.NAME";
     public static final String EXTRA_SOUND = "com.example.com.example.SimpleCountdownTimer.SOUND";
+    public static final String EXTRA_COLOR = "com.example.com.example.SimpleCountdownTimer.COLOR";
     private TextView edittext;
     private TextView edittext2;
     private TextView edittext3;
     private TextView edittext4;
     private String sound;
+    private int timerColor;
 
     /**
      * Indicates which timer we are modifying.
@@ -97,11 +105,19 @@ public class SetTimer extends AppCompatActivity {
 
         Log.d(TAG, "Index of Timer is: " + _indexOfTimer);
 
-        edittext.setText("Timer 1");
+        edittext.setText("Timer");
         edittext2.setText("00");
         edittext3.setText("00");
         edittext4.setText("00");
         Log.i("Tag", "Finished");
+
+        ColorPickerView colorPickerView = findViewById(R.id.colorPickerView);
+        colorPickerView.setColorListener(new ColorListener() {
+            @Override
+            public void onColorSelected(int color, boolean fromUser) {
+                timerColor = color;
+            }
+        });;
     }
 
     /**
@@ -134,6 +150,7 @@ public class SetTimer extends AppCompatActivity {
         intent.putExtra(MainActivity.EXTRA_TIME, totalTimeInMilliseconds);
         intent.putExtra(MainActivity.EXTRA_RESET_TIME, totalTimeInMilliseconds);
         intent.putExtra(SetTimer.EXTRA_SOUND, sound);
+        intent.putExtra(SetTimer.EXTRA_COLOR, timerColor);
         startActivity(intent);
     }
 }

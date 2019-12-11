@@ -29,11 +29,11 @@
             android:id="@+id/time_left_display"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="50.0"
             android:text="TextView"
-            android:textSize="24dp"
-            android:textColor="@color/colorPrimaryDark"
             android:textAlignment="center"
-            android:layout_weight="50.0" />
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="24dp" />
 
         <Button
             android:id="@+id/start_stop_button"
@@ -44,9 +44,10 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView5"
+    <Button
+        android:id="@+id/delete_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="" />
+        android:layout_height="38dp"
+        android:text="Delete"
+        android:textSize="12sp" />
 </LinearLayout>

@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                     serializable.timeLeftInMilliseconds -= timeEllapsedMilliseconds;
                 }
 
-                Timer timer = new Timer(timersLoaded[i].timeLeftInMilliseconds, timersLoaded[i].timerName, timersLoaded[i].resetTime, serializable.timerSound);
+                Timer timer = new Timer(timersLoaded[i].timeLeftInMilliseconds, timersLoaded[i].timerName, timersLoaded[i].resetTime, serializable.timerSound, serializable.timerColor);
 
                 if (timersLoaded[i].timerRunning) {
                     timer.startTimer();
@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         String nameTimer = intent.getStringExtra(EXTRA_NAME);
         String timerSound = intent.getStringExtra(SetTimer.EXTRA_SOUND);
         int indexNewTimer = intent.getIntExtra(SetTimer.POSITION_INDEX, -1);
+        int timerColor = intent.getIntExtra(SetTimer.EXTRA_COLOR, 0xFFFFFF);
         Log.d(TAG, "Index New Timer: " + indexNewTimer);
 
         if (indexNewTimer != -1)
@@ -127,10 +128,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
             if (indexNewTimer < _timers.size()) {
                 //It is an existing timer we are modifying
-                _timers.set(indexNewTimer, new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime, timerSound));
+                _timers.set(indexNewTimer, new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime, timerSound, timerColor));
             } else {
                 //It is a new timer
-                _timers.add(new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime, timerSound));
+                _timers.add(new Timer(timeLeftInMillisecondsLoaded, nameTimer, resetTime, timerSound, timerColor));
             }
         }
 
@@ -266,6 +267,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     @Override
     public void stopSound(String soundName) {
         _audioEngine.StopSound(soundName);
+    }
+
+    @Override
+    public void deleteButtonPress(TimerHolder holder) {
+        _timers.remove(holder.Position);
+        _adapter.notifyDataSetChanged();
     }
 
     /**

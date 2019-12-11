@@ -65,6 +65,7 @@ public class TimerListAdapter extends ArrayAdapter<Timer> {
         holder.Timer = _objects.get(position);
         holder.SetResetButton = convertView.findViewById(R.id.set_reset_button);
         holder.StartStopButton = convertView.findViewById(R.id.start_stop_button);
+        holder.DeleteButton = convertView.findViewById(R.id.delete_button);
         holder.NameTextView = (TextView) convertView.findViewById(R.id.timerName);
         holder.TimeLeftTextView = (TextView) convertView.findViewById(R.id.time_left_display);
         holder.Position = position;
@@ -115,6 +116,16 @@ public class TimerListAdapter extends ArrayAdapter<Timer> {
                 MainActivityInterface.setResetButtonPress(holder);
             }
         });
+
+        holder.DeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MainActivityInterface.deleteButtonPress(holder);
+            }
+        });
+
+        holder.view.setBackgroundColor(holder.Timer.getColor());
     }
 
     /**
