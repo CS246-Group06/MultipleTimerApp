@@ -117,6 +117,16 @@ public class Timer  {
 
         return returnValue;
     }
+    /*public void manageBlinkEffect(){
+        ObjectAnimator anim = ObjectAnimator.ofArgb(view,"backgroundColor", Color.WHITE,Color.RED,Color.WHITE);
+        anim.setDuration(800);
+        anim.setEvaluator(new ArgbEvaluator());
+        anim.setRepeatMode(ValueAnimator.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+        anim.start();
+
+    }*/
+
 }
 
 
